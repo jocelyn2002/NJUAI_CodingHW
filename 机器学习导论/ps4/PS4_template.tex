@@ -1,0 +1,296 @@
+\documentclass[a4paper,UTF8]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{color}
+\usepackage{ctex}
+\usepackage{enumerate}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+
+\theoremstyle{definition}
+\newtheorem*{solution}{Solution}
+\newtheorem*{prove}{Proof}
+\usepackage{multirow}              
+
+\setlength{\evensidemargin}{.25in}
+\setlength{\textwidth}{6in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\topmargin}{-0.5in}
+% \setlength{\textheight}{9.5in}
+%%%%%%%%%%%%%%%%%%此处用于设置页眉页脚%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}                                
+\usepackage{lastpage}                                           
+\usepackage{layout}                                             
+\footskip = 12pt 
+\pagestyle{fancy}                    % 设置页眉                 
+\lhead{2020年春季}                    
+\chead{机器学习导论}                                                
+% \rhead{第\thepage/\pageref{LastPage}页} 
+\rhead{作业一}                                                                                               
+\cfoot{\thepage}                                                
+\renewcommand{\headrulewidth}{1pt}  			%页眉线宽，设为0可以去页眉线
+\setlength{\skip\footins}{0.5cm}    			%脚注与正文的距离           
+\renewcommand{\footrulewidth}{0pt}  			%页脚线宽，设为0可以去页脚线
+
+\makeatletter 									%设置双线页眉                                        
+\def\headrule{{\if@fancyplain\let\headrulewidth\plainheadrulewidth\fi%
+		\hrule\@height 1.0pt \@width\headwidth\vskip1pt	%上面线为1pt粗  
+		\hrule\@height 0.5pt\@width\headwidth  			%下面0.5pt粗            
+		\vskip-2\headrulewidth\vskip-1pt}      			%两条线的距离1pt        
+	\vspace{6mm}}     								%双线与下面正文之间的垂直间距              
+\makeatother  
+
+%--
+
+%--
+\begin{document}
+\title{机器学习导论\\习题四}
+\author{181220010, 丁豪, 181220010@smail.nju.edu.cn}
+\maketitle
+
+
+\section*{学术诚信}
+
+本课程非常重视学术诚信规范，助教老师和助教同学将不遗余力地维护作业中的学术诚信规范的建立。希望所有选课学生能够对此予以重视。\footnote{参考尹一通老师\href{http://tcs.nju.edu.cn/wiki/}{高级算法课程}中对学术诚信的说明。}
+
+\begin{tcolorbox}
+	\begin{enumerate}
+		\item[(1)] 允许同学之间的相互讨论，但是{\color{red}\textbf{署你名字的工作必须由你完成}}，不允许直接照搬任何已有的材料，必须独立完成作业的书写过程;
+		\item[(2)] 在完成作业过程中，对他人工作（出版物、互联网资料）中文本的直接照搬（包括原文的直接复制粘贴及语句的简单修改等）都将视为剽窃，剽窃者成绩将被取消。{\color{red}\textbf{对于完成作业中有关键作用的公开资料，应予以明显引用}}；
+		\item[(3)] 如果发现作业之间高度相似将被判定为互相抄袭行为，{\color{red}\textbf{抄袭和被抄袭双方的成绩都将被取消}}。因此请主动防止自己的作业被他人抄袭。
+	\end{enumerate}
+\end{tcolorbox}
+
+\section*{作业提交注意事项}
+\begin{tcolorbox}
+	\begin{enumerate}
+		\item[(1)] 请在LaTeX模板中{\color{red}\textbf{第一页填写个人的姓名、学号、邮箱信息}}；
+		\item[(2)] 本次作业需提交该pdf文件、问题4可直接运行的源码(main.py)、问题4的输出文件(学号\_ypred.csv)，将以上三个文件压缩成zip文件后上传。zip文件格式为{\color{red}\textbf{学号.zip}}，例如170000001.zip；pdf文件格式为{\color{red}\textbf{学号\_姓名.pdf}}，例如170000001\_张三.pdf。
+		\item[(3)] 未按照要求提交作业，或提交作业格式不正确，将会{\color{red}\textbf{被扣除部分作业分数}}；
+		\item[(4)] 本次作业提交截止时间为{\color{red}\textbf{5月14日23:59:59}}。除非有特殊情况（如因病缓交），否则截止时间后不接收作业，本次作业记零分。
+	\end{enumerate}
+\end{tcolorbox}
+
+\newpage
+
+\section*{\textbf{[30 pts]} Problem1 1 [Kernel Functions]}
+
+\begin{enumerate}[(1)]
+	\item \textbf{[10 pts]} 对于$\bm{x},\bm{y} \in \mathbb{R}^N$，考虑函数$\kappa(x,y) = \tanh( a \bm{x}^\top \bm{y} + b)$，其中$a,b$是任意实数。试说明$a \geq 0,b \geq 0$是$\kappa$为核函数的必要条件。
+	\item \textbf{[10 pts]} 考虑$ \mathbb{R}^N $上的函数$ \kappa(\bm{x},\bm{y}) = (\bm{x}^\top \bm{y} + c)^d $，其中$c$是任意实数，$d,N$是任意正整数。试分析函数$\kappa$何时是核函数，何时不是核函数，并说明理由。
+	\item \textbf{[10 pts]} 当上一小问中的函数是核函数时，考虑$d=2$的情况，此时$\kappa$将$N$维数据映射到了什么空间中？具体的映射函数是什么？更一般的，对$d$不加限制时，$\kappa$将$N$维数据映射到了什么空间中？(本小问的最后一问可以只写结果)
+\end{enumerate}
+
+\begin{solution}\ \\
+	(1)考虑核矩阵的特征值之和
+	\begin{equation*}
+		\begin{split}
+			&\because \kappa \text{为核函数}\\
+			&\therefore \text{K为半正定矩阵}\\
+			&\therefore \text{K的特征值}\lambda_i \ge 0,i=1,2 \dots n\\
+			&\therefore \text{任意数据}D=\{x_1,x_2,\dots,x_n\} ,\text{有}\sum_{i=1}^n \lambda_i=\sum_{i=1}^n \kappa(x_i,x_i) =\sum_{i=1}^n \tanh(a x_i^Tx_i+b) \ge 0\ \ (*)\\
+			&\because x_i^Tx_i \ge 0\\
+			&\therefore \text{若} b < 0, \text{则当} x_i = 0,i=1,2,\dots,n\ \text{时} \sum_{i=1}^n \tanh(b)<0,(*)\text{不满足},\text{因此} b \ge 0\\
+			&\ \ \ \text{若} a<0, \text{则当} ||x_i|| > -\frac{b}{a},i=1,2,\dots,n\ \text{时} \sum_{i=1}^n \tanh(ax_i^Tx_i+b)<0,(*)\text{不满足},\text{因此}a\ge 0\\
+			&\text{综上}a\ge 0,b\ge 0\text{是}\kappa\text{为核函数的必要条件}
+		\end{split}
+	\end{equation*}
+	\\(2)当$c\ge 0$，令$\kappa_1(x,y) = x^Ty$即映射到x,y自身，这显然是核函数。令$\kappa_2(x,y)=c$, K为全c方阵， 可以发现1阶主子式为c, 2阶以上主子式由数学归纳法可得都为0， 因此K是半正定矩阵， 所以$\kappa_2$是核函数。$\kappa(x,y)=(\kappa_1(x,y)+\kappa_2(x,y))^d, \kappa=(\kappa_1+\kappa_2)^d$因为核函数的线性组合与直积仍是核函数，因此$\kappa$是核函数。\\
+	当$c<0$, 令$D=\{[-1\ 1]^T,[1\ -1]^T\}$,则$|K|=(2+c)^{2d}-(2-c)^{2d} < 0$， 不满足所有主子式非负条件， K不是半正定矩阵， 因此$\kappa$不是核函数。\\
+	综上$c\ge 0$时是核函数，$c<0$时不是。
+	\\(3)当d=2时，$\kappa$将N维数据映射到$\mathbb{R}^{(N+1)^2}$空间中，具体的映射函数为。\\
+	$\phi(x)^T=[x_1^{\prime 2}\ \ x_1^\prime x_2^\prime\ \ x_1^\prime x_3^\prime\ \ \dots \ \ x_i^\prime x_j^\prime\ \ \dots\ \ x_{n+1}^{\prime 2}]$,即i,j的完全组合，其中 $x^{\prime T}=[\ x_1\ \ x_2\ \ \dots\ \ x_n\ \ \sqrt{c}\ ]$\\
+	证明:先进行一次映射：$x^{\prime T}=[\ x_1\ \ x_2\ \ \dots\ \ x_n\ \ \sqrt{c}\ ]$ 则$\kappa(x,y)=(x^{\prime T}y^\prime)^d$\\
+	$(x^{\prime T}y^\prime)^2 = (\sum_{i=1}^{N+1}x^\prime_iy^\prime_i)^2=\sum_{i=1}^{N+1}\sum_{j=1}^{N+1}x^\prime_iy^\prime_ix^\prime_jy^\prime_j=\sum_{i=1}^{N+1}\sum_{j=1}^{N+1}(x^\prime_ix^\prime_j)(y^\prime_iy^\prime_j)=\phi(x)^T\phi(y)$\\
+	\\更一般的，当d不加限制，$\kappa$将N维数据映射到$\mathbb{R}^{(N+1)^d}$中,映射方法与d=2类似，也是按照d重组合进行映射
+\end{solution}
+
+\section*{[30 pts] Problem 2 [Surrogate Function in SVM]}
+
+在软间隔支持向量机问题中，我们的优化目标为
+\begin{equation}\label{eq1}
+\min _{\boldsymbol{w}, b} \frac{1}{2}\|\boldsymbol{w}\|^{2}+C \sum_{i=1}^{m} \ell_{0 / 1}\left(y_{i}\left(\boldsymbol{w}^{\mathrm{T}} \boldsymbol{x}_{i}+b\right)-1\right) . 
+\end{equation}
+然而$\ell_{0 / 1}$数学性质不太好，它非凸、非连续，使得式(\ref{eq1})难以求解。实践中我们通常会将其替换为“替代损失”，替代损失一般是连续的凸函数，且为$\ell_{0 / 1}$的上界，比如hinge损失，指数损失，对率损失。下面我们证明在一定的条件下，这样的替换可以保证最优解不变。
+
+我们考虑实值函数$h:\mathcal{X}\rightarrow\mathbb{R}$构成的假设空间，其对应的二分类器$f_h:\mathcal{X}\rightarrow\{+1,-1\}$为
+$$f_{h}(x)=\left\{\begin{array}{ll}
++1 & \text { if } h(x)\geq 0 \\
+-1 & \text { if } h(x)<0
+\end{array}\right.$$
+$h$的期望损失为$R(h)=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[I_{f_{h}(x) \neq y}\right]$，其中$I$为指示函数。设$\eta(x)=\mathbb{P}(y=+1|x)$，则贝叶斯最优分类器当$\eta(x)\geq \frac{1}{2}$时输出$1$，否则输出$-1$。因此可以定义贝叶斯得分$h^*(x)=\eta(x)-\frac{1}{2}$和贝叶斯误差$R^*=R(h^*)$。
+
+设$\Phi:\mathbb{R}\rightarrow\mathbb{R}$为非减的凸函数且满足$\forall u\in \mathbb{R},1_{u\leq 0}\leq \Phi(-u)$。对于样本$(x,y)$，定义函数$h$在该样本的$\Phi$-损失为$\Phi(-yh(x))$，则$h$的期望损失为$\mathcal{L}_{\Phi}(h)=\underset{(x, y) \sim \mathcal{D}}{\mathbb{E}}[\Phi(-y h(x))]$。定义$L_{\Phi}(x, u)=\eta(x) \Phi(-u)+(1-\eta(x)) \Phi(u)$，设$h_{\Phi}^{*}(x)=\underset{u \in[-\infty,+\infty]}{\operatorname{argmin}} L_{\Phi}(x, u)$，$\mathcal{L}_{\Phi}^{*}=\mathcal{L}_{\Phi}(h_{\Phi}^{*}(x))$。
+
+我们考虑如下定理的证明：
+
+若对于$\Phi$，存在$s\geq 1$和$c>0$满足对$\forall x\in\mathcal{X}$有
+\begin{equation}\label{eq2}
+\left|h^{*}(x)\right|^{s}=\left|\eta(x)-\frac{1}{2}\right|^{s} \leq c^{s}\left[L_{\Phi}(x, 0)-L_{\Phi}\left(x, h_{\Phi}^{*}(x)\right)\right]
+\end{equation}
+则对于任何假设$h$，有如下不等式成立
+\begin{equation}\label{eq3}
+R(h)-R^{*} \leq 2 c\left[\mathcal{L}_{\Phi}(h)-\mathcal{L}_{\Phi}^{*}\right]^{\frac{1}{s}}
+\end{equation}
+
+\begin{enumerate}[(1)]
+	\item \textbf{[5 pts]} 请证明
+	\begin{equation}\label{eq4}
+	\Phi\left(-2 h^{*}(x) h(x)\right)\leq L_{\Phi}(x, h(x))
+	\end{equation}
+
+	\item \textbf{[10 pts]} 请证明
+	\begin{equation}\label{eq5}
+	R(h)-R^{*} \le 2 \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[\left|h^{*}(x)\right| 1_{h(x) h^{*}(x) \leq 0}\right]
+	\end{equation}
+	提示：先证明
+	$$R(h)=\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[2 h^{*}(x) 1_{h(x)<0}+(1-\eta(x))\right]$$
+	\item \textbf{[10 pts]} 利用式(\ref{eq4})和式(\ref{eq5})完成定理的证明。
+	\item \textbf{[5 pts]} 请验证对于Hinge损失 $\Phi(u)=\max(0,1+u)$，有$s=1,c=\frac{1}{2}$。
+\end{enumerate}
+
+\begin{solution}\ \\
+(1)
+\begin{equation*}
+	\begin{split}
+		&\text{要证}\ \Phi\left(-2 h^{*}(x) h(x)\right)\leq L_{\Phi}(x, h(x))\\
+		&\text{即证}\ \Phi\left(-2(\eta(x)-\frac{1}{2})h(x)\right) \le \eta(x)\Phi(-h(x)) + (1-\eta(x))\Phi(h(x))\\
+		&\text{即证}\ \Phi(\eta(x)(-h(x))+(1-\eta(x))h(x)) \le \eta(x)\Phi(-h(x)) + (1-\eta(x))\Phi(h(x))\\
+		&\text{因为}\Phi\text{是凸函数且}\eta(x)+(1-\eta(x))=1\text{,所以上式成立}\\
+	\end{split}
+\end{equation*}
+(2)
+\begin{equation*}
+	\begin{split}
+		R(h)&=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[I_{f_{h}(x) \neq y}\right]\\
+		&=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[I_{f_{h}(x)=-1 , y=1}+I_{f_{h}(x)=1 , y=-1}\right]\\
+		&=\mathbb{E}_{x\sim \mathcal{D}_x}\left[P(y=1|x)I_{f_h(x)=-1} +P(y=-1|x)I_{f_h(x)=1}\right]\\
+		&=\mathbb{E}_{x\sim \mathcal{D}_x}\left[\eta(x)I_{f_h(x)=-1} +(1-\eta(x))I_{f_h(x)=1}\right]\\
+		&=\mathbb{E}_{x\sim \mathcal{D}_x}\left[\eta(x)I_{h(x)<0} + (1-\eta(x))I_{h(x)\ge 0}\right]\\
+		&=\mathbb{E}_{x\sim \mathcal{D}_x}\left[\eta(x)I_{h(x)<0} + (1-\eta(x))(1 - I_{h(x)< 0})\right]\\
+		&=\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[2 h^{*}(x) 1_{h(x)<0}+(1-\eta(x))\right]
+	\end{split}
+\end{equation*}
+\begin{equation*}
+	\begin{split}
+		R(h)-R^* &= R(h)-R(h^*)\\
+		&=\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[2 h^{*}(x) 1_{h(x)<0}+(1-\eta(x))\right]\\
+		&-\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[2 h^{*}(x) 1_{(h^*(x)<0}+(1-\eta(x))\right]\\
+		&=\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[2 h^{*}(x) 1_{h(x)<0}-2 h^{*}(x) 1_{h^*(x)<0}\right]\\
+		&=2\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[h^{*}(x) (1_{h(x)<0}-1_{h^*(x)<0})\right]\\
+		&\le 2\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[h^{*}(x)1_{h(x)<0,h^*(x)\ge 0} - h^*(x)1_{h(x)\ge 0,h^*(x)<0}\right]\\
+		&=2\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[|h^{*}(x)|1_{h(x)<0,h^*(x)\ge 0} +|h^*(x)|1_{h(x)\ge 0,h^*(x)<0}\right]\\
+		&=2 \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[\left|h^{*}(x)\right| 1_{h(x) h^{*}(x) \leq 0}\right]
+	\end{split}
+\end{equation*}
+(3)
+\begin{equation*}
+	\begin{split}
+		R(h)-R* &\le 2 \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[\left|h^{*}(x)\right| 1_{h(x) h^{*}(x) \leq 0}\right]\\
+		&\le 2 \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[c [L_\Phi(x,0)-L_\Phi(x,h^*_\Phi(x))]^\frac{1}{s} 1_{h(x) h^{*}(x) \leq 0}\right]\\
+		&= 2c \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[[L_\Phi(x,0)-L_\Phi(x,h^*_\Phi(x))]^\frac{1}{s} 1_{h(x) h^{*}(x) \leq 0}\right]\\
+		&\le 2c \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}\left[[L_\Phi(x,0)-L_\Phi(x,h^*_\Phi(x))]^\frac{1}{s}\right]\\
+		&=2c \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}[L_\Phi(x,0)-L_\Phi(x,h^*_\Phi(x))]^\frac{1}{s}\\
+		&\le 2c \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}[L_\Phi(x,h(x))-L_\Phi(x,h^*_\Phi(x))]^\frac{1}{s}\\
+		&=2c \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}[\eta(x)\Phi(-h(x))+(1-\eta(x))\Phi(h(x))\\
+		&+\eta(x)\Phi(-h^*_\Phi(x))+(1-\eta(x))\Phi(h^*_\Phi(x))]^\frac{1}{s}\\
+		&=2c \underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}[\Phi(-yh(x))-\Phi(-yh^*_\Phi(x))]^\frac{1}{s}\\
+		&=2c [\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}[\Phi(-yh(x))]-\underset{x \sim \mathcal{D}_{x}}{\mathbb{E}}[\Phi(-yh^*_\Phi(x))]]^\frac{1}{s}\\
+		&=2c [L_\Phi(h)-L^*_\Phi]^\frac{1}{s}
+	\end{split}
+\end{equation*}
+(4)
+\begin{equation*}
+	\begin{split}
+		&\text{即证}\ |h^*(x)| = |\eta(x)-\frac{1}{2}| \le \frac{1}{2}[L_\Phi(x,0)-L_\Phi(x,h^*_\Phi(x))]\\
+		&=\frac{1}{2}|\Phi(0)- \min_u L_\Phi(x,u) |\\
+		&=\frac{1}{2}|1-\min_u [\eta(x)\max(0,1-u)+(1-\eta(x))\max(0,1+u)] |\\
+		&\text{不妨设} 0.5<\eta(x)\le 1\\
+		&\eta(x)\max(0,1-u)+(1-\eta(x))\max(0,1+u) = 
+		\begin{cases}
+			\eta(x)(1-u)&\mbox{if $u \le -1$}\\
+			1+u-2u\eta(x)&\mbox{if $-1<u<1$}\\
+			(1-\eta(x))(1+u)&\mbox{if $u \ge 1$}\\
+		\end{cases}\\
+		&\text{因此}\min_u [\eta(x)\max(0,1-u)+(1-\eta(x))\max(0,1+u)] = 2-2\eta(x), \text{当u=1时取}\\
+		&\text{因此}\frac{1}{2}|1-\min_u [\eta(x)\max(0,1-u)+(1-\eta(x))\max(0,1+u)] |\\
+		&=\frac{1}{2}|1-2+2\eta(x)| = |\eta(x)-\frac{1}{2}| \ge |\eta(x)-\frac{1}{2}| = |h^*(x)|\\
+		&0\le \eta(x) \le 0.5\text{的情况同理可证，证毕。}
+	\end{split}
+\end{equation*}
+\end{solution}
+
+\section*{[20 pts] Problem 3 [Generalization Error of SVM]}
+
+留一损失(leave-one-out error)使用留一法对分类器泛化错误率进行估计，即：每次使用一个样本作为测试集，剩余样本作为训练集，最后对所有测试误差求平均。对于SVM算法$\mathcal{A}$，令$h_S$为该算法在训练集$S$上的输出，则该算法的经验留一损失可形式化定义为
+\begin{equation}
+	\hat{R}_{\text{LOO}}(\mathcal{A}) = \frac{1}{m} \sum_{i=1}^m 1_{ h_{ S-\{x_i\} } (x_i) \neq y_i } . 
+\end{equation}
+本题通过探索留一损失的一些数学性质，来分析SVM的泛化误差，并给出一个期望意义下的泛化误差界。(注：本题仅考虑可分情形。)
+
+\begin{enumerate}[(1)]
+	\item \textbf{[10pts]} 在实践中，测试误差相比于泛化误差是很容易获取的。虽然测试误差不一定是泛化误差的准确估计，但测试误差与泛化误差往往能在期望意义下一致。试证明留一损失满足该性质，即
+	\begin{equation}
+		\mathbb{E}_{S \sim \mathcal{D}^m} [ \hat{R}_{\text{LOO} }(\mathcal{A}) ] = \mathbb{E}_{S' \sim \mathcal{D}^{m-1}} [ R(h_{S'}) ] . 
+	\end{equation}
+	\item \textbf{[5 pts]} SVM之所以取名为SVM，是因为其训练结果仅与一部分样本(即支持向量)有关。这一现象可以抽象的表示为，如果$x$不是$h_S$的支持向量，则$h_{S-\{x\}} = h_S$。这一性质在分析误差时有关键作用，考虑如下问题：如果$x$不是$h_S$的支持向量，$h_{S-\{x\}}$会将$x$正确分类吗，为什么？该问题结论的逆否命题是什么？
+	\item \textbf{[5 pts]} 基于上一小问的结果，试证明下述SVM的泛化误差界
+	\begin{equation}
+		\mathbb{E}_{S \sim \mathcal{D}^m}[ R(h_S) ] \leq \mathbb{E}_{S \sim \mathcal{D}^{m+1}} \left[ \frac{N_{SV}(S)}{m+1} \right] , 
+	\end{equation}
+	其中$N_{SV}(S)$为$h_S$支持向量的个数。
+\end{enumerate}
+
+\begin{solution}
+(1)
+\begin{equation*}
+	\begin{split}
+		\mathbb{E}_{S \sim \mathcal{D}^m} [ \hat{R}_{\text{LOO} }(\mathcal{A}) ]&=\mathbb{E}_{S \sim \mathcal{D}^m} [ \frac{1}{m}\sum_{i=1}^m 1_{h_{S-\{x_i\}}(x_i)\neq y_i} ]\\
+		&=\frac{1}{m}\sum_{i=1}^m \mathbb{E}_{S \sim \mathcal{D}^m} [1_{h_{S-\{x_i\}}(x_i)\neq y_i}]\\
+		&=\mathbb{E}_{S \sim \mathcal{D}^m} [1_{h_{S-\{x_i\}}(x_i)\neq y_i}]\\
+		&=\mathbb{E}_{S^\prime \sim \mathcal{D}^{m-1},x \sim \mathcal{D}} [1_{h_{S^\prime}(x)\neq y}]\\
+		&=\mathbb{E}_{S' \sim \mathcal{D}^{m-1}} [ R(h_{S'}) ]
+	\end{split}
+\end{equation*}
+(2)若$x$不是$h_S$的支持向量，则$h_{S-\{x\}}$会将他正确分类。因为硬间隔支持向量机分类器$h_S$可以将$x$正确分类，而$h_{S-\{x\}}=h_S$，所以也可以正确分类。\\
+逆否命题是：若$h_{S-\{x\}}$不能将$x$正确分类，则$x$是$h_S$的支持向量。\\
+(3)
+\begin{equation*}
+	\begin{split}
+		\mathbb{E}_{S \sim \mathcal{D}^m} [R(h_{S})] &= \mathbb{E}_{S \sim \mathcal{D}^m} [1_{h_S(x)\neq y}]\\
+		&\text{由上一题结论，不能正确分类的一定是扩展训练集的支持向量，}\\
+		&\text{而扩展训练集的支持向量不一定不能分类，所以有}\\
+		&\le \mathbb{E}_{S \sim \mathcal{D}^{m}} [1_{x \in SV(S+\{x_i \in \mathcal{D}\})}]\\
+		&=\frac{\mathbb{E}_{S \sim \mathcal{D}^{m}}[N_{SV}(S+\{x_i \in \mathcal{D}\})]}{m+1}\\
+		&=\mathbb{E}_{S \sim \mathcal{D}^{m+1}} \left[ \frac{N_{SV}(S)}{m+1} \right]
+	\end{split}
+\end{equation*}
+\end{solution}
+
+\section*{[20 pts] Problem 4 [NN in Practice]}
+
+\textbf{请结合编程题指南进行理解}
+\par 在训练神经网络之前，我们需要确定的是整个网络的结构，在确定结构后便可以输入数据进行端到端的学习过程。考虑一个简单的神经网络：输入是2维向量，隐藏层由2个隐层单元组成，输出层为1个输出单元，其中隐层单元和输出层单元的激活函数都是$Sigmoid$函数。请打开\textbf{main.py}程序并完成以下任务：
+\begin{enumerate}[(1)]
+	\item \textbf{[4 pts]} 请完成Sigmoid函数及其梯度函数的编写。
+	\item \textbf{[2 pts]} 请完成MSE损失函数的编写。
+	\item \textbf{[9 pts]} 请完成NeuralNetwork\_221()类中train函数的编写，其中包括向前传播(可参考predict函数)、梯度计算、更新参数三个部分。
+	\item \textbf{[5 pts]} 请对测试集(test\_feature.csv)所提供的数据特征完成尽量准确的分类预测。
+\end{enumerate}
+
+\begin{solution}\ \\
+(1)略\\
+(2)略\\
+(3)略\\
+(4)1.更换损失函数为交叉熵，并更改了相应的d\_L\_d\_ypred。\\
+2.针对训练步长，引入衰减系数decay，每10个epoch将learn\_rate乘上decay，以此来达到逐渐降低的学习速度，在训练的一开始快速收敛，在训练的后续放慢速度精修细节。\\
+3.将训练集划分为训练、验证两个集合，并使用early stop方法，在验证集正确率下降时停止，将验证集最高正确率的网络作为最终模型。但是在实际操作过程中，发现在训练早期可能出现正确率波动情况导致提前停止，于是最终这部分没有采用\\
+4.在操作的过程中发现，由于网络参数初值的选择具有随机性，有小概率会产生无法得到较好结果的情况。因此增加了验证集上正确率的输出，多次运行，取成绩正常的网络作为预测网络。最后的验证集正确率为$82.50\%$
+
+\end{solution}
+
+\end{document}

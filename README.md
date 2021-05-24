@@ -1,2 +1,9 @@
 # NJUAI_CodingHW
-A collection of my own homework codes, mainly from School of Artificial Intelligence, NJU.
+- `WARNING!!` 纯个人代码收集，无正确性保证，请勿简单cp
+  - 课程主要来自人工智能学院
+  - 少量为开放选修与通识课
+- 项目中的内容经过大量删减，难以保证克隆后可以直接运行
+  - 数据集，过大直接丢弃或保留一小部分
+  - 绘图、表格等代码产物，直接丢弃，因为重新运行可以得到
+  - 作业要求、实验报告，随缘保留
+

@@ -1,0 +1,33 @@
+Max-Cut文件夹里面包含了max-cut实验中计算regret ratio的代码，使用者不要改变文件的相对路径。
+使用者只需要关注Max_Cut_main_2D.py , Max_Cut_main_3D.py , Max_Cut_main_4D.py, Max_Cut_main_5D.py这几个文件， 其他文件都是被这几个文件所调用的文件，但不可或缺。
+Max_Cut_main_2D.py 用来计算二目标max-cut的regret ratio
+Max_Cut_main_3D.py 用来计算三目标max-cut的regret ratio
+Max_Cut_main_4D.py 用来计算四目标max-cut的regret ratio
+Max_Cut_main_5D.py 用来计算五目标max-cut的regret ratio
+
+
+我们以Max_Cut_main_2D.py 举例，Max_Cut_main_2D.py 文件中main函数部分如下
+
+if __name__=="__main__":
+
+    data=GetFacebookData('./football.gml')
+    objectiveFunc = ObjectiveFunction(data)
+    n = np.shape(data)[0]
+
+    population=[]
+
+    ratio = Max_Cut_RRMS_2D.Do(population, data, objectiveFunc)
+    print('the regret ratio is %f'%(ratio))
+
+使用者只需要把population替换成NSGA-II或者MOEA算法返回的population即可。我们实验要求返回20个解，所以所以population是一个长度为20的列表。
+为了简便，我们给出一个长度为3的列表，例如：population=[[0,3,5],[5,3,2],[1,2,5,8,9]]，即population里面包含了3个解
+第一个解[0,3,5]，图被划分成两部分，节点0，3，5在一部分，其余节点在另一部分；
+第二个解[5,3,2]，图被划分成两部分，节点5，3，2在一部分，其余节点在另一部分；
+第三个解[1,2,5,8,9]，图被划分成两部分，节点1,2,5,8,9在一部分，其余节点在另一部分；
+把main函数中的population=[]替换成population=[[0,3,5],[5,3,2],[1,2,5,8,9]]就可以求出这三个解的regret ratio. 
+
+注意python环境需要安装如下包：numpy, networkx, cvxpy, cvxopt
+可以使用pip install numpy, pip install networkx,  pip install cvxpy, pip install cvxopt依次安装这几个包。
+
+
+

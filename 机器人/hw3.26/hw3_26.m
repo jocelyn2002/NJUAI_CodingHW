@@ -1,0 +1,9 @@
+dlx = 0.1
+dly = 0
+dlz = 0
+dx=0.3
+dy=0
+dz=0.6
+D = [0 -dlz dly dx; dlz 0 -dlx dy; -dly dlx 0 dz;0 0 0 0]
+T = [0 1 0 7;0 0 1 3;1 0 0 0;0 0 0 1]
+dT = D * T

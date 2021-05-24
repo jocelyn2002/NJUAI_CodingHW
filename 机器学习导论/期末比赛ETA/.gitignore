@@ -1,0 +1,8 @@
+*.csv
+*.zip
+*.rar
+__pycache__
+dask-worker-space
+.ipynb_checkpoints
+.vscode
+tempCodeRunnerFile.py

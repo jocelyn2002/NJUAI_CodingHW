@@ -1,0 +1,33 @@
+Coding (20):
+Easy (10):
+Train a CNN model on MNIST
+Implementing the attack method "iterative fast gradient sign method" (iFGSM) (see Page 13 in the slides)
+
+Medium (+5):
+Implementing C&W attack method (see Page 14 in the slides, and [3])
+Implementing targeted C&W attack (see Page 11 in the slides, and [3])
+
+Hard (+5):
+Implementing black-box C&W attack (see Page 16 in the slides, and [4])
+
+[1] FGSM: Ian J. Goodfellow, Jonathon Shlens, Christian Szegedy, “Explaining and Harnessing Adversarial Examples”, ICLR 2015   https://arxiv.org/abs/1412.6572
+[2] iFGSM: Alexey Kurakin, Ian Goodfellow, Samy Bengio, “Adversarial Examples in the Physical World”, Arxiv 2017  https://arxiv.org/pdf/1607.02533.pdf
+[3] C&W: Nicholas Carlini, David Wagner, “Towards Evaluating the Robustness of Neural Networks”, Arxiv 2017 https://arxiv.org/pdf/1608.04644.pdf
+[4] black-box: Pin-Yu Chen, Huan Zhang, Yash Sharma, Jinfeng Yi, Cho-Jui Hsieh, “ZOO: Zeroth Order Optimization based Black-box
+Attacks to Deep Neural Networks without Training Substitute Models”, AISEC 2017    https://arxiv.org/pdf/1708.03999.pdf
+
+
+Report (20):
+1) The background of adversarial examples (Note: trying to answer the following two questions using your own words, being different with the slides)
+   1.1) What is adversarial example?
+   1.2) Why we should study adversarial examples?
+2) The attack method:
+   2.1) Motivations, basic idea
+   2.2) Objective function and solution
+3) Implementations:
+   3.1) Codes
+   3.2) Training and testing accuracy on the clean examples of MNIST
+   3.3) Generating one adversarial image based on each testing image of MNIST (usins each attack method introduced above)
+   3.4) Accuracy on all adversarial images, average L2 norm of adversarial noise on all adversarial images
+   3.5) Presenting some adversarial images with their predictions and L2 norm of noise
+
