@@ -1,0 +1,45 @@
+BasicGame 
+
+
+    SpriteSet
+        floor > Immovable randomtiling=0.9 img=oryx/floor3 hidden=True
+        movable >
+          avatar > MovingAvatar img=newset/man3 frameRate=10 
+          thief  >          
+            monsterQuick > RandomNPC cooldown=2 cons=6 img=oryx/devil1
+            monsterNormal > RandomNPC cooldown=4 cons=8 img=oryx/ghost1
+            monsterSlow > RandomNPC cooldown=8 cons=12 img=oryx/skeleton1
+        wall > Immovable autotiling=true img=oryx/wall3
+        timer > Immovable  img=oryx/wall3
+        box > Passive img=newset/block2       
+        treasure > Immovable img=oryx/treasure1
+
+    LevelMapping   
+        A > floor avatar
+        b > floor box
+        t > floor treasure
+        1 > floor monsterQuick
+        2 > floor monsterNormal
+        3 > floor monsterSlow
+        w > wall
+        . > floor
+        T > floor timer
+		
+    InteractionSet
+        
+        movable wall EOS  > stepBack
+        treasure thief > killSprite
+        thief   box    > stepBack
+        thief thief    > stepBack
+        avatar treasure > stepBack
+        box    avatar  > bounceForward 	
+        box    thief     > undoAll notStype=monsterQuick,monsterNormal,monsterSlow
+        box    wall treasure box > undoAll notStype=monsterQuick,monsterNormal,monsterSlow
+        wall   box       > undoAll notStype=monsterQuick,monsterNormal,monsterSlow,avatar
+        avatar thief   > killSprite	
+        avatar TIME > undoAll  notStype=monsterQuick,monsterNormal,monsterSlow   timer=100 repeating=true scoreChange=5 
+    TerminationSet
+        Timeout limit=600                  win=True
+        SpriteCounter stype=treasure limit=0 win=False
+        SpriteCounter stype=avatar limit=0   win=False
+   

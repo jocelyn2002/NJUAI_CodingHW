@@ -1,0 +1,30 @@
+BasicGame 
+    SpriteSet
+        road > Immovable img=newset/blockT hidden=True
+        water > Immovable img=oryx/backLBlue
+        key   > Immovable img=oryx/key2
+        door  > Door 
+            open > img=oryx/dooropen1
+            closed > img=oryx/doorclosed1
+        avatar > MovingAvatar img=newset/girl4 frameRate=10
+            nokey >
+            withkey > color=ORANGE
+        
+    LevelMapping
+        . > road
+        w > water
+        K > road key
+        A > road nokey
+        C > road closed
+        
+    TerminationSet
+       
+        Timeout            limit=1500                 win=False
+        SpriteCounter      stype=closed  limit=0      win=True
+
+    InteractionSet
+        avatar water EOS  > stepBack
+        nokey key > transformTo stype=withkey
+        key avatar > killSprite scoreChange=5
+        closed withkey  > transformTo stype=open scoreChange=10
+   

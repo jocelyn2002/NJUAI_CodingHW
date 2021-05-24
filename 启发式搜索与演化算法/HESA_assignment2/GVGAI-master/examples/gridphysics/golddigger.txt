@@ -1,0 +1,60 @@
+BasicGame square_size=30 
+    SpriteSet
+        floor > Immovable hidden=True img=oryx/backLBrown
+        goodies > Immovable
+            jewels  > 
+                gold     > color=GOLD img=oryx/gold2 shrinkfactor=0.5
+                diamond  > color=GREEN shrinkfactor=0.6 img=oryx/diamond1
+                treasure > img=oryx/treasure1
+	        
+            chest > color=GOLD img=oryx/treasure2
+            trapchest > color=GOLD img=oryx/treasure2
+        shovel > OrientedFlicker limit=2 color=LIGHTGRAY img=oryx/pickaxe shrinkfactor=0.6
+
+        moving >
+            avatar  > ShootAvatar stype=shovel img=oryx/axeman1
+                nokey   > 
+                withkey > color=GOLD 
+            enemy   > 		  
+                monsterQuick > RandomNPC cooldown=2 cons=6 img=oryx/bat1
+                monsterNormal > RandomNPC cooldown=4 cons=8 img=oryx/spider2
+                monsterSlow > RandomNPC cooldown=8 cons=12 img=oryx/scorpion1
+                monsterChest > RandomNPC cooldown=8 cons=12 img=oryx/trapChest1
+        wall > Immovable img=oryx/dirtWall autotiling=True
+        key  > Immovable color=ORANGE img=oryx/key2	shrinkfactor=0.6	
+    LevelMapping
+        d > diamond floor
+        g > gold floor
+        c > chest floor
+        t > treasure floor
+        A > nokey floor
+        1 > monsterQuick floor
+        2 > monsterNormal floor
+        3 > monsterSlow floor
+        f > trapchest floor
+        k > key floor
+        . > floor 
+        w > wall floor
+
+    TerminationSet
+        SpriteCounter  stype=avatar  limit=0 win=False
+        MultiSpriteCounter  stype1=jewels stype2=chest limit=0 win=True
+
+    InteractionSet
+        moving wall jewels EOS > stepBack
+        avatar enemy > killSprite
+        
+        nokey key > transformTo stype=withkey 
+        key nokey > killSprite scoreChange=5   
+        chest withkey > transformTo stype=treasure  scoreChange=3
+        trapchest withkey > transformTo stype=monsterChest scoreChange=1
+ 
+        enemy shovel > killSprite scoreChange=1
+        avatar enemy > killSprite scoreChange=-5
+        enemy key chest trapchest > stepBack
+        enemy enemy > stepBack
+         
+        jewels shovel > killSprite scoreChange=3
+        wall key > killSprite
+        wall shovel > killSprite
+        nokey chest trapchest > stepBack
